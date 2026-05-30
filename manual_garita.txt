@@ -1,0 +1,623 @@
+MANUAL DE INSTALACION, EJECUCION Y SOLUCION DE PROBLEMAS
+Sistema de Control de Ingreso para Garita Tecnologica Residencial
+Version con codigo y nombres en espanol
+
+============================================================
+1. OBJETIVO DEL MANUAL
+============================================================
+
+Este manual explica desde cero como ejecutar el proyecto, como probar sus funciones principales
+y que hacer si algo no sale correctamente.
+
+El sistema permite:
+- Registrar vecinos.
+- Registrar visitantes sin prerregistro usando codigo unico del vecino.
+- Crear prerregistros con codigo QR.
+- Validar codigos QR.
+- Guardar una bitacora de ingresos.
+- Notificar al vecino por correo o simular la notificacion en consola.
+
+============================================================
+2. REQUISITOS PREVIOS
+============================================================
+
+Antes de ejecutar el proyecto, se recomienda tener instalado:
+
+1. Docker Desktop
+   Sirve para ejecutar el backend, frontend y base de datos sin instalar todo manualmente.
+
+2. Docker Compose
+   Normalmente viene incluido con Docker Desktop.
+
+3. Navegador web
+   Puede ser Google Chrome, Microsoft Edge, Firefox, etc.
+
+------------------------------------------------------------
+2.1 Verificar que Docker este instalado
+------------------------------------------------------------
+
+Abrir una terminal y ejecutar:
+
+docker --version
+
+RESULTADO POSITIVO:
+Si aparece una version, por ejemplo:
+Docker version 25.x.x
+significa que Docker esta instalado correctamente.
+
+RESULTADO NEGATIVO:
+Si aparece un mensaje como:
+'docker' no se reconoce como un comando interno o externo
+entonces Docker no esta instalado o no esta agregado al PATH.
+
+QUE HACER:
+- Instalar Docker Desktop.
+- Reiniciar la computadora despues de instalar.
+- Abrir nuevamente la terminal.
+- Ejecutar otra vez docker --version.
+
+------------------------------------------------------------
+2.2 Verificar Docker Compose
+------------------------------------------------------------
+
+Ejecutar:
+
+docker compose version
+
+RESULTADO POSITIVO:
+Debe aparecer una version de Docker Compose.
+
+RESULTADO NEGATIVO:
+Si dice que docker compose no existe, puede ser que Docker Desktop no este instalado correctamente
+o que sea una version antigua.
+
+QUE HACER:
+- Actualizar Docker Desktop.
+- Reiniciar Docker Desktop.
+- Reiniciar la terminal.
+- Volver a ejecutar docker compose version.
+
+============================================================
+3. DESCARGAR Y DESCOMPRIMIR EL PROYECTO
+============================================================
+
+1. Descargar el archivo ZIP del proyecto.
+2. Dar clic derecho sobre el ZIP.
+3. Seleccionar Extraer todo o Descomprimir.
+4. Debe quedar una carpeta llamada:
+
+garita_tecnologica_residencial_es
+
+RESULTADO POSITIVO:
+Dentro de la carpeta se deben ver archivos como:
+- docker-compose.yml
+- .env.example
+- README.md
+- backend
+- frontend
+
+RESULTADO NEGATIVO:
+Si no aparecen esos archivos, probablemente se entro a una carpeta incorrecta o el ZIP no se extrajo bien.
+
+QUE HACER:
+- Revisar que se haya extraido el ZIP completo.
+- Entrar a la carpeta principal del proyecto, no a una subcarpeta.
+- Si hace falta, eliminar la carpeta extraida y volver a descomprimir el ZIP.
+
+============================================================
+4. ABRIR TERMINAL EN LA CARPETA DEL PROYECTO
+============================================================
+
+La terminal debe estar ubicada dentro de la carpeta principal:
+
+garita_tecnologica_residencial_es
+
+En Windows, una forma facil es:
+1. Abrir la carpeta del proyecto.
+2. Dar clic en la barra de direccion.
+3. Escribir cmd.
+4. Presionar Enter.
+
+Tambien se puede usar PowerShell.
+
+RESULTADO POSITIVO:
+Al ejecutar:
+
+dir
+
+o en Linux/Mac:
+
+ls
+
+se deben ver archivos como docker-compose.yml y .env.example.
+
+RESULTADO NEGATIVO:
+Si no se ve docker-compose.yml, la terminal no esta en la carpeta correcta.
+
+QUE HACER:
+- Usar cd para entrar a la carpeta correcta.
+- Ejemplo:
+  cd Downloads\garita_tecnologica_residencial_es
+
+============================================================
+5. CREAR EL ARCHIVO .env
+============================================================
+
+El archivo .env guarda la configuracion del proyecto.
+El proyecto trae una plantilla llamada .env.example.
+
+------------------------------------------------------------
+5.1 En Windows PowerShell
+------------------------------------------------------------
+
+Ejecutar:
+
+copy .env.example .env
+
+------------------------------------------------------------
+5.2 En Windows CMD
+------------------------------------------------------------
+
+Ejecutar:
+
+copy .env.example .env
+
+------------------------------------------------------------
+5.3 En Linux o Mac
+------------------------------------------------------------
+
+Ejecutar:
+
+cp .env.example .env
+
+RESULTADO POSITIVO:
+Se crea un archivo nuevo llamado .env.
+
+RESULTADO NEGATIVO:
+Si aparece que no encuentra .env.example, significa que no estas en la carpeta principal.
+
+QUE HACER:
+- Verificar que estes dentro de garita_tecnologica_residencial_es.
+- Ejecutar dir o ls para confirmar que .env.example existe.
+- Volver a ejecutar el comando.
+
+NOTA:
+Para probar el proyecto no es necesario modificar el archivo .env.
+Ya viene configurado para usar PostgreSQL dentro de Docker.
+
+============================================================
+6. LEVANTAR EL PROYECTO CON DOCKER COMPOSE
+============================================================
+
+Ejecutar el siguiente comando en la carpeta principal:
+
+docker compose up --build
+
+Este comando levanta tres servicios:
+1. db: base de datos PostgreSQL.
+2. backend: API con FastAPI.
+3. frontend: interfaz web con React y Vite.
+
+RESULTADO POSITIVO:
+La terminal empezara a descargar imagenes, instalar dependencias y mostrar logs.
+Al final deberias poder abrir el sistema en el navegador.
+
+RESULTADO NEGATIVO 1:
+Aparece un error indicando que Docker Desktop no esta corriendo.
+
+QUE HACER:
+- Abrir Docker Desktop.
+- Esperar a que diga que esta iniciado.
+- Volver a ejecutar docker compose up --build.
+
+RESULTADO NEGATIVO 2:
+Aparece error de puerto ocupado, por ejemplo puerto 5432, 8000 o 5173.
+
+QUE HACER:
+- Revisar si ya hay otra aplicacion usando esos puertos.
+- Cerrar otros servidores locales.
+- Si ya habias levantado este proyecto antes, ejecutar:
+  docker compose down
+- Luego ejecutar otra vez:
+  docker compose up --build
+
+RESULTADO NEGATIVO 3:
+El backend inicia antes que PostgreSQL y muestra error de conexion.
+
+QUE HACER:
+- Esperar unos segundos.
+- Si el error continua, detener con Ctrl + C.
+- Ejecutar:
+  docker compose down
+- Luego:
+  docker compose up --build
+
+============================================================
+7. ABRIR EL SISTEMA EN EL NAVEGADOR
+============================================================
+
+Cuando los contenedores esten corriendo, abrir:
+
+Frontend:
+http://localhost:5173
+
+Backend:
+http://localhost:8000
+
+Documentacion de la API:
+http://localhost:8000/docs
+
+RESULTADO POSITIVO:
+- En http://localhost:5173 se ve la pantalla del sistema de garita.
+- En http://localhost:8000 aparece un mensaje indicando que la API funciona.
+- En http://localhost:8000/docs aparece la documentacion automatica de FastAPI.
+
+RESULTADO NEGATIVO 1:
+La pagina no carga.
+
+QUE HACER:
+- Verificar que docker compose up --build siga ejecutandose.
+- Revisar en la terminal si hay errores.
+- Confirmar que estas usando los puertos correctos.
+
+RESULTADO NEGATIVO 2:
+El frontend abre, pero no registra datos.
+
+QUE HACER:
+- Abrir http://localhost:8000/docs para confirmar que el backend esta funcionando.
+- Revisar que el contenedor backend no tenga errores.
+- Reiniciar con:
+  docker compose down
+  docker compose up --build
+
+============================================================
+8. PRUEBA COMPLETA DEL SISTEMA
+============================================================
+
+------------------------------------------------------------
+8.1 Registrar un vecino
+------------------------------------------------------------
+
+1. Abrir http://localhost:5173.
+2. Ir a la pestana Vecinos.
+3. Llenar los datos:
+
+Nombre completo: Carlos Lopez
+Correo: carlos@email.com
+Numero de casa: A-12
+Codigo unico: CASA12
+
+4. Presionar Guardar vecino.
+
+RESULTADO POSITIVO:
+Debe aparecer un mensaje de exito y el vecino se muestra en la tabla.
+
+RESULTADO NEGATIVO 1:
+Aparece que el codigo o la casa ya existe.
+
+QUE HACER:
+- Usar otro numero de casa.
+- Usar otro codigo unico.
+- Ejemplo: CASA13.
+
+RESULTADO NEGATIVO 2:
+Aparece error de correo invalido.
+
+QUE HACER:
+- Escribir un correo con formato correcto.
+- Ejemplo: vecino@email.com.
+
+------------------------------------------------------------
+8.2 Registrar ingreso normal
+------------------------------------------------------------
+
+1. Ir a la pestana Ingreso normal.
+2. Llenar:
+
+Codigo del vecino: CASA12
+Nombre del visitante: Juan Perez
+Documento/DPI: 1234567890101
+Placa opcional: P123ABC
+Nombre del agente: Pedro Seguridad
+Observaciones: Visita familiar
+
+3. Presionar Registrar ingreso y notificar.
+
+RESULTADO POSITIVO:
+Debe mostrar que el ingreso fue registrado.
+Tambien se genera una notificacion al vecino.
+Si no hay SMTP configurado, el correo se imprime en la consola del backend como simulacion.
+
+RESULTADO NEGATIVO 1:
+Dice Codigo de vecino no encontrado.
+
+QUE HACER:
+- Verificar que el vecino haya sido creado.
+- Revisar que el codigo este escrito igual que en Vecinos.
+- Respetar letras y numeros.
+
+RESULTADO NEGATIVO 2:
+No aparece correo en una bandeja real.
+
+QUE HACER:
+- Recordar que por defecto el correo es simulado.
+- Revisar la consola del backend.
+- Para enviar correo real, configurar SMTP en el archivo .env.
+
+------------------------------------------------------------
+8.3 Crear prerregistro con QR
+------------------------------------------------------------
+
+1. Ir a la pestana Prerregistro QR.
+2. Llenar:
+
+Codigo del vecino: CASA12
+Nombre del visitante: Maria Garcia
+Documento/DPI: 9876543210101
+Placa opcional: M456XYZ
+Horas de validez: 24
+
+3. Presionar Generar QR.
+
+RESULTADO POSITIVO:
+Debe aparecer una imagen QR y un token.
+
+RESULTADO NEGATIVO 1:
+Dice Codigo de vecino no encontrado.
+
+QUE HACER:
+- Confirmar que el codigo del vecino existe.
+- Crear primero el vecino si no existe.
+
+RESULTADO NEGATIVO 2:
+No aparece la imagen QR.
+
+QUE HACER:
+- Revisar que el backend este funcionando.
+- Refrescar la pagina.
+- Intentar generar nuevamente el prerregistro.
+
+------------------------------------------------------------
+8.4 Validar QR
+------------------------------------------------------------
+
+Hay dos formas:
+
+FORMA A: Pegar el token manualmente
+1. Copiar el token generado en el prerregistro.
+2. Ir a Validar QR.
+3. Pegar el token en el campo Token QR.
+4. Escribir el nombre del agente.
+5. Presionar Validar y registrar ingreso.
+
+FORMA B: Escanear con camara
+1. Ir a Validar QR.
+2. Presionar Iniciar camara.
+3. Dar permiso al navegador para usar la camara.
+4. Apuntar la camara al QR.
+5. Escribir nombre del agente.
+6. Presionar Validar y registrar ingreso.
+
+RESULTADO POSITIVO:
+El sistema indica que el QR es valido y registra el ingreso.
+
+RESULTADO NEGATIVO 1:
+Dice QR no encontrado.
+
+QUE HACER:
+- Verificar que el token copiado sea correcto.
+- Crear un nuevo prerregistro.
+
+RESULTADO NEGATIVO 2:
+Dice Este QR ya fue utilizado.
+
+QUE HACER:
+- Cada QR solo se puede usar una vez.
+- Crear un nuevo prerregistro para esa visita.
+
+RESULTADO NEGATIVO 3:
+Dice Este QR ya vencio.
+
+QUE HACER:
+- Crear un nuevo prerregistro con mas horas de validez.
+
+RESULTADO NEGATIVO 4:
+La camara no inicia.
+
+QUE HACER:
+- Dar permiso de camara al navegador.
+- Usar Google Chrome o Microsoft Edge.
+- Verificar que otra aplicacion no este usando la camara.
+- Si no funciona, copiar y pegar el token manualmente.
+
+------------------------------------------------------------
+8.5 Revisar bitacora
+------------------------------------------------------------
+
+1. Ir a la pestana Bitacora.
+2. Presionar Actualizar si no aparecen datos.
+
+RESULTADO POSITIVO:
+Se muestran los ingresos normales y por QR.
+
+RESULTADO NEGATIVO:
+No aparece ningun registro.
+
+QUE HACER:
+- Registrar primero un ingreso normal o validar un QR.
+- Presionar Actualizar.
+- Revisar que el backend y la base de datos esten corriendo.
+
+============================================================
+9. CONFIGURAR CORREO REAL OPCIONAL
+============================================================
+
+Por defecto, el sistema simula el envio de correo en la consola.
+Para enviar correo real, editar el archivo .env.
+
+Ejemplo:
+
+SERVIDOR_SMTP=smtp.gmail.com
+PUERTO_SMTP=587
+USUARIO_SMTP=tu_correo@gmail.com
+CLAVE_SMTP=tu_clave_o_password_de_aplicacion
+CORREO_REMITENTE=tu_correo@gmail.com
+
+RESULTADO POSITIVO:
+Al registrar una visita, el vecino recibe correo real.
+
+RESULTADO NEGATIVO:
+El correo no llega o el backend muestra error de autenticacion.
+
+QUE HACER:
+- Verificar usuario y clave.
+- Si usas Gmail, normalmente necesitas una clave de aplicacion.
+- Revisar que la cuenta permita SMTP.
+- Si no quieres usar correo real, dejar los campos SMTP vacios y usar la simulacion.
+
+============================================================
+10. DETENER EL SISTEMA
+============================================================
+
+Para detenerlo, en la terminal donde esta corriendo Docker:
+
+Ctrl + C
+
+Luego ejecutar:
+
+docker compose down
+
+RESULTADO POSITIVO:
+Los contenedores se detienen.
+
+Si quieres borrar tambien los datos guardados en PostgreSQL:
+
+docker compose down -v
+
+ADVERTENCIA:
+El comando docker compose down -v borra la base de datos del proyecto.
+Usarlo solo si quieres empezar desde cero.
+
+============================================================
+11. EJECUCION SIN DOCKER OPCIONAL
+============================================================
+
+Esta forma es opcional y mas avanzada.
+Solo usarla si no deseas usar Docker.
+
+Requisitos:
+- Python instalado.
+- Node.js instalado.
+- PostgreSQL instalado y configurado.
+
+------------------------------------------------------------
+11.1 Backend
+------------------------------------------------------------
+
+Entrar a backend:
+
+cd backend
+
+Crear entorno virtual:
+
+python -m venv venv
+
+Activar entorno virtual en Windows:
+
+venv\Scripts\activate
+
+Activar entorno virtual en Linux/Mac:
+
+source venv/bin/activate
+
+Instalar dependencias:
+
+pip install -r requirements.txt
+
+Ejecutar backend:
+
+uvicorn app.principal:aplicacion --reload
+
+RESULTADO POSITIVO:
+El backend queda disponible en http://localhost:8000.
+
+RESULTADO NEGATIVO:
+Si aparece error de conexion a PostgreSQL, revisar la variable URL_BASE_DATOS en .env.
+
+------------------------------------------------------------
+11.2 Frontend
+------------------------------------------------------------
+
+Entrar a frontend:
+
+cd frontend
+
+Instalar dependencias:
+
+npm install
+
+Ejecutar frontend:
+
+npm run dev
+
+RESULTADO POSITIVO:
+El frontend queda disponible en http://localhost:5173.
+
+RESULTADO NEGATIVO:
+Si npm no existe, instalar Node.js.
+
+============================================================
+12. EXPLICACION PARA PRESENTACION
+============================================================
+
+El proyecto esta dividido en tres partes:
+
+1. Frontend
+   Es la parte visual usada por el agente de garita. Permite registrar vecinos,
+   ingresos normales, prerregistros QR, validacion QR y ver bitacora.
+
+2. Backend
+   Esta hecho con FastAPI. Recibe las solicitudes del frontend, valida los datos,
+   registra la informacion en la base de datos y genera los QR.
+
+3. Base de datos
+   Usa PostgreSQL. Guarda vecinos, visitantes, prerregistros y bitacora de ingresos.
+
+Se uso SQLAlchemy para manejar la conexion con la base de datos mediante modelos.
+Se uso Pydantic para validar datos de entrada y salida.
+Se uso Docker Compose para levantar frontend, backend y base de datos con un solo comando.
+
+============================================================
+13. COMANDOS IMPORTANTES RESUMIDOS
+============================================================
+
+Verificar Docker:
+docker --version
+
+Verificar Docker Compose:
+docker compose version
+
+Crear .env:
+copy .env.example .env
+
+Levantar proyecto:
+docker compose up --build
+
+Detener proyecto:
+docker compose down
+
+Borrar datos y reiniciar desde cero:
+docker compose down -v
+
+Abrir frontend:
+http://localhost:5173
+
+Abrir backend:
+http://localhost:8000
+
+Abrir documentacion API:
+http://localhost:8000/docs
+
+============================================================
+FIN DEL MANUAL
+============================================================

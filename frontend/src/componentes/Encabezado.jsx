@@ -1,0 +1,1 @@
+export default function Encabezado({sesion,cerrarSesion}){return <header className='encabezado'><div><div className='marca'>GC</div><div><h1>Garita Colonia Ciudad Satelite</h1><p>Panel de control de accesos</p></div></div><div className='usuario-caja'><span>{sesion.rol}</span><b>{sesion.usuario}</b><button onClick={cerrarSesion}>Salir</button></div></header>}
