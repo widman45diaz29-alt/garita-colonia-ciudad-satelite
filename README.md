@@ -1,4 +1,7 @@
-# Garita Colonia Ciudad Satelite
+# Proyecto Garita Colonia Ciudad Satelite
+Elaborado por:  Widman Diaz Peña
+                Anderson Leonel Echeverria Ayala
+                Gendry Gabriel Hernandez Reyes 
 
 Sistema web para control de ingreso residencial con FastAPI, PostgreSQL, React y Docker.
 
